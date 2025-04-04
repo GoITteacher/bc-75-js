@@ -5,19 +5,77 @@
  * - Параметри та аргументи
  * - Повернення значення
  */
+//!======================================================
 
-// console.log("Before fnA execution");
-// fnA();
-// console.log("After fnA execution");
+// function foo() {
+//   console.log('\n\n1. .........');
+//   console.log('2. .........');
+//   console.log('3. .........');
+//   console.log('4. .........');
+//   console.log('5. .........');
+//   console.log('6. .........');
+// }
 
-// console.log("Before fnB execution");
-// fnB();
-// console.log("After fnB execution");
+// foo();
+// foo();
+// foo();
+// foo();
+// foo();
+// foo();
 
-// console.log("Before fnC execution");
-// fnC();
-// console.log("After fnC execution");
+//!======================================================
 
+// function sum(x, y, q) {
+//   console.log(x, y, q);
+// }
+
+// sum(5, 25, 40);
+
+//!======================================================
+
+// function myDay(day, food) {
+//   console.log('\n\nпрокинутись');
+//   console.log(`поснідати ${food}`);
+//   console.log(`зібрати рюкзак на ${day}`);
+//   console.log('піти до школи');
+//   console.log('повернутись зі школи');
+//   console.log('вільний час');
+//   console.log('спати');
+// }
+
+// myDay('Понеділок', 'яблуком');
+// myDay('Вівторок');
+// myDay('Середа', 'борщ', 100);
+
+//!======================================================
+
+// function sum(x, y) {
+//   console.log(x + y);
+
+// }
+
+// sum(10, 20, 120);
+// sum(50);
+//!======================================================
+
+// function foo(x, y) {
+//   let sum = x + y;
+//   sum += 10;
+//   sum += 16;
+//   sum += 15;
+//   sum += 12;
+//   sum += 15;
+//   // return undefined
+// }
+
+// const res = foo(10, 15);
+// console.log(res);
+
+// const res1 = foo(55, 12235);
+// console.log(res1);
+// console.log(res1 * 0);
+
+//!======================================================
 /**
  * Напиши функцію calcBMI(weight, height) яка розраховує та повертає індекс
  * маси тіла людини. Для цього необхідно розділити вагу на
@@ -30,5 +88,87 @@
  * Індекс маси тіла необхідно округлити до однієї цифри після коми.
  */
 
-// const bmi = calcBMI("88,3", "1.75");
+// function calcBMI(weight, height) {
+//   weight = weight.replace(',', '.');
+//   height = height.replace(',', '.');
+
+//   weight = parseFloat(weight);
+//   height = parseFloat(height);
+
+//   const res = weight / height ** 2;
+//   return +res.toFixed(1);
+// }
+
+// const bmi = calcBMI('88,3', '1.75');
 // console.log(bmi); // 28.8
+
+//!======================================================
+
+// ```
+// Задача-1
+// Напишіть функцію яка приймає два параметри str1 та str2. Функція повинна повернути булеве значення true якщо перша літера str1 дорівнює останій літері str2. В іншому випадку функція повинна повернути булеве значення false.
+// ```
+
+// function task1(str1, str2) {
+//   const firstLetter = str1[0];
+//   const lastLetter = str2[str2.length - 1];
+//   const res = firstLetter === lastLetter;
+//   return res;
+// }
+
+// const res1 = task1('Hello', 'World');
+// console.log(res1);
+
+//!======================================================
+
+// ```
+// Задача-2
+// Напишіть функцію яка приймає два параметри str1 та str2. Функція повинна повернути булеве значення true якщо перша літера str1 дорівнює першій літері str2. В іншому випадку функція повинна повернути булеве значення false.
+// ```
+
+// function task2(str1, str2) {
+//   const firstLetter1 = str1[0];
+//   const firstLetter2 = str2[0];
+//   return firstLetter1 === firstLetter2;
+// }
+
+//!======================================================
+// ```
+// Задача-3
+// Напишіть функцію яка приймає два параметри str1 та str2. Функція повинна повернути булеве значення true якщо довжина str1 дорівнює довжині str2. В іншому випадку функція повинна повернути булеве значення false.
+// ```
+
+// function task3(str1, str2) {
+//   const len1 = str1.length;
+//   const len2 = str2.length;
+//   return len1 === len2;
+// }
+
+// console.log(task3('Hello', 'World'));
+
+//!======================================================
+// ```
+// Задача-4
+// Напишіть функцію яка приймає число num. Функція повинна повернути булеве значення true якщо кількість цифр у числі парна. В іншому випадку функція повинна повернути булеве значення false.
+// ```
+
+// function task4(num) {
+//   const str = String(num);
+//   const len = str.length;
+//   return len % 2 === 1;
+// }
+
+// console.log(task4(35));
+
+//!======================================================
+// ```
+// Задача-5
+// Напишіть функцію, яка приймає два параметри num1 та num2. Функція повинна повернути булеве значення true, якщо num1 більше, ніж num2. В іншому випадку функція повинна повернути булеве значення false.
+// ```
+
+// function task5(num1, num2) {
+//   return num1 > num2;
+// }
+
+// console.log(task5(10, 20));
+// console.log(task5(25, 20));
