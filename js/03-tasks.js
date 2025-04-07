@@ -5,10 +5,33 @@
  */
 
 const hours = 14;
-const minutes = 26;
-let timestring;
+const minutes = 25;
 
-console.log(timestring);
+// function time2Str(h, m) {
+//   if (m !== 0) {
+//     return `${h} г. ${m} хв.`;
+//   } else {
+//     return `${h} г.`;
+//   }
+// }
+
+// function time2Str(h, m) {
+//   let message = `${h} г.`;
+
+//   if (m !== 0) {
+//     message += ` ${m} хв.`;
+//   }
+
+//   return message;
+// }
+
+// function time2Str(h, m) {
+//   return m !== 0 ? `${h} г. ${m} хв.` : `${h} г.`;
+// }
+// // debugger;
+// const time = time2Str(hours, minutes);
+
+// console.log(time);
 
 /**
  * Напиши скрипт для відображення часу дедлайну здачі проекту. Використовуй if...else.
@@ -19,4 +42,14 @@ console.log(timestring);
  * Якщо до дедлайну 3+ днів - виведи рядок "Date in the future"
  */
 
-const daysUntilDeadline = 5;
+// const daysUntilDeadline = 0;
+
+// if (daysUntilDeadline === 0) {
+//   console.log('Today');
+// } else if (daysUntilDeadline === 1) {
+//   console.log('Tomorrow');
+// } else if (daysUntilDeadline === 2) {
+//   console.log('Overmorrow');
+// } else {
+//   console.log('Date in the future');
+// }
