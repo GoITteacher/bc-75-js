@@ -6,34 +6,58 @@
  * - Цикл for...of
  * - Різниця у використанні for и for...of
  */
+//!======================================================
 
-const friends = ["Mango", "Kiwi", "Poly", "Ajax"];
-console.table(friends);
+// const arr = ['Mango', 'Kiwi', 'Poly', 'Ajax'];
 
-for (let i = 0; i < friends.length; i += 1) {
-  friends[i] += `-${i}`;
-}
+// console.log(arr[0]);
+// console.log(arr[1]);
+// console.log(arr[2]);
+// console.log(arr[3]);
 
-console.table(friends);
+// for (let i = 0; i < arr.length; i++) {
+//   const element = arr[i]
+//   console.log(element);
+// }
 
-for (let friend of friends) {
-  console.log(friend);
-  console.log(friends);
-}
+// for (let i = 0; i < arr.length; i++) {
+//   const element = arr[i];
 
-/**
- * Напиши скрипт для обчислення площі прямокутника зі сторонами,
- * значення яких зберігаються у змінній values у вигляді рядка.
- * Значення гарантовано розділені пробілом.
- */
+// }
 
-const values = "8 11";
+//!======================================================
+// const friends = [3, 8, 2, 5, 1, 4, 2, 1];
 
-/**
- * Напиши скрипт для перебору масиву fruits.
- * Для кожного елемента масиву виведи в консоль рядок
- * у форматі номер_елемента: значення_елемента.
- * Нумерація елементів повинна починатися з 1.
- */
+// let min = friends[0];
 
-const fruits = ["🍎", "🍇", "🍑", "🍌", "🍋"];
+// for (let i = 0; i < friends.length; i++) {
+//   const element = friends[i];
+//   if (element < min) {
+//     min = element;
+//   }
+// }
+
+// console.log(min);
+//!======================================================
+
+// const friends = [3, 8, 2, 5, 1, 4, 2, 1];
+// const res = [];
+
+// for (let i = 0; i < friends.length; i += 2) {
+//   const elem = friends[i];
+//   res.push(elem * 2);
+// }
+
+// console.log(res);
+
+//!======================================================
+// const arr = [1, 2, 3];
+
+// for (const user of arr) {
+//   arr[?] = 2;
+// }
+
+// for (let i = 0; i < arr.length; i+=3) {
+//   const element = arr[i];
+//   arr[i] = element * 2;
+// }
