@@ -4,30 +4,70 @@
  * - Пошук за ланцюжком областей видимості
  */
 
-const globalValue = 10;
+//!======================================================
 
-console.log(globalValue); // 10
+// const balance = 100;
 
-function foo() {
-  const a = 20;
-  console.log(a); // 20
-  console.log(globalValue); // 10
+// function foo() {
+//   debugger;
+//   const a = 10;
+//   const b = 20;
+//   const c = 30;
 
-  for (let i = 0; i < 5; i += 1) {
-    console.log(a); // 20
-    console.log(globalValue); // 10
+//   if (true) {
+//     const a = 20;
+//     if (true) {
+//       const b = 50;
+//       console.log(a, b, c);
+//     }
 
-    if (i === 2) {
-      console.log(a); // 20
-      console.log(globalValue); // 10
-    }
-  }
-}
+//     if (true) {
+//       console.log(a, b, c);
+//     }
+//     console.log(a, b, c);
+//   }
+//   console.log(a, b, c);
+// }
+
+// foo();
+
+// function foo() {
+//   for (let i = 0; i < 10; i++) {
+//     console.log(i);
+//   }
+
+//   console.log(i);
+// }
+
+// function foo1() {
+//   const x = 25;
+// }
+
+//!======================================================
+// const globalValue = 10;
+
+// console.log(globalValue); // 10
+
+// function foo() {
+//   const a = 20;
+//   console.log(a); // 20
+//   console.log(globalValue); // 10
+
+//   for (let i = 0; i < 5; i += 1) {
+//     console.log(a); // 20
+//     console.log(globalValue); // 10
+
+//     if (i === 2) {
+//       console.log(a); // 20
+//       console.log(globalValue); // 10
+//     }
+//   }
+// }
 
 // ❌ Помилка! Змінна a не доступна в цій області видимості
-console.log(a);
+// console.log(a);
 
-for (let i = 0; i < 3; i += 1) {
-  // ❌ Помилка! Змінна a не доступна в цій області видимості
-  console.log(a);
-}
+// for (let i = 0; i < 3; i += 1) {
+//   // ❌ Помилка! Змінна a не доступна в цій області видимості
+//   console.log(a);
+// }
