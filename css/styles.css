@@ -74,3 +74,42 @@ body {
 .deposit {
   background-color: rgba(157, 255, 157, 0.429);
 }
+
+.active-item {
+  color: red;
+  border: 1px solid red;
+  width: 300px;
+  padding: 10px;
+}
+
+.invalid-password {
+  color: red;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.dark-theme {
+  background-color: rgb(58, 58, 58);
+  color: white !important;
+}
+
+.my-item {
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  gap: 5px;
+}
+
+.transaction-item {
+  padding: 5px;
+  border: 1px solid black;
+  display: flex;
+  border-radius: 5px;
+  width: 500px;
+  gap: 15px;
+}

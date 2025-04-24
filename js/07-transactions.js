@@ -92,3 +92,42 @@ const transactionHistory = [
 ];
 
 const tableEl = document.querySelector('.js-transaction-table');
+
+//!======================================================
+
+// function transactionTemplate(transaction) {
+//   const isDeposit = transaction.amount > 500;
+//   const str = isDeposit ? 'deposit' : 'withdraw';
+
+//   return `<tr class="table-item ${str}">
+//           <td>${transaction.id.slice(0, 5)}...</td>
+//           <td>${transaction.amount}</td>
+//           <td>${transaction.date.split('T')[0]}</td>
+//           <td>${transaction.business}</td>
+//           <td>${transaction.name}</td>
+//           <td>${transaction.type}</td>
+//           <td>${transaction.account}</td>
+//         </tr>`;
+// }
+const ulElem = document.querySelector('.js-list');
+
+function transactionTemplate(transaction) {
+  const isDeposit = transaction.amount > 500;
+  const str = isDeposit ? 'deposit' : 'withdraw';
+  return `<li class="transaction-item ${str}">
+        <p>Amount: ${transaction.amount}</p>
+        <p>Date: ${transaction.date.split('T')[0]}</p>
+      </li>`;
+}
+
+function transactionsTemplate(transactions) {
+  return transactions.map(transactionTemplate).join('\n\n\n');
+}
+
+const sortedArray = transactionHistory.toSorted((a, b) => {
+  return a.amount - b.amount;
+});
+
+const markup = transactionsTemplate(sortedArray);
+
+ulElem.insertAdjacentHTML('beforeend', markup);
