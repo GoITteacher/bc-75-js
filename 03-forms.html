@@ -13,28 +13,40 @@
     <form class="js-form feedback-form">
       <input
         type="text"
-        name="email"
+        name="title"
         class="form-input"
-        placeholder="Email"
+        placeholder="Title"
         required
       />
+
       <input
-        type="password"
-        name="password"
+        type="number"
+        name="price"
         class="form-input"
-        placeholder="Password"
+        placeholder="price"
         required
       />
-      <textarea
-        cols="30"
-        rows="10"
-        name="comment"
-        class="form-textarea"
-        placeholder="Comment"
-      ></textarea>
-      <button class="form-button">Submit</button>
+
+      <input
+        type="number"
+        name="amount"
+        class="form-input"
+        placeholder="amount"
+        required
+      />
+
+      <input
+        type="date"
+        name="date"
+        class="form-input"
+        placeholder="date"
+        required
+      />
+
+      <button class="form-button" name="myBtn">Submit</button>
     </form>
 
+    <ul class="js-product-list"></ul>
     <script src="./js/03-forms.js"></script>
   </body>
 </html>

@@ -37,6 +37,11 @@ input {
   border: 1px solid black;
   border-radius: 10px;
   overflow: hidden;
+  background-color: #f6a6a6;
+}
+
+.car-item.on-sale {
+  background-color: #bef6a6;
 }
 
 .car-item img {
@@ -67,4 +72,51 @@ input {
 .car-group {
   display: flex;
   flex-direction: column;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid black;
+  padding: 5px;
+  width: 300px;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 100px;
+  top: 100px;
+  background-color: red;
+}
+
+.valid {
+  outline: none;
+  border: 3px solid green;
+}
+
+.invalid {
+  outline: none;
+  border: 3px solid red;
+}
+
+.product-item {
+  list-style-type: none;
+  width: 200px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #f6a6a6;
+  padding: 10px;
+  margin: 10px;
+}
+
+.product-item p {
+  margin: 2px;
+}
+
+.container {
+  display: flex;
+  gap: 10px;
 }
