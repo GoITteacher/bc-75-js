@@ -8,6 +8,7 @@
 @import url('./youtube.css');
 @import url('./user.css');
 @import url('./pokemon.css');
+@import url('./jobs.css');
 
 * {
   box-sizing: border-box !important;

@@ -1,0 +1,103 @@
+.job-card {
+  width: 500px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  list-style: none;
+  transition: box-shadow 0.3s ease;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.job-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.employer-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.job-meta h3.job-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.employer-name {
+  margin: 4px 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.employer-website {
+  color: #0073e6;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.employer-website:hover {
+  text-decoration: underline;
+}
+
+.job-details {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+.job-details p {
+  margin: 4px 0;
+}
+
+.job-description {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.job-description p {
+  margin: 6px 0;
+}
+
+.job-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.apply-button,
+.apply-link {
+  padding: 8px 16px;
+  background-color: #0073e6;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.apply-button:hover,
+.apply-link:hover {
+  background-color: #005bb5;
+}
+
+.apply-link.direct {
+  background-color: #28a745;
+}
+
+.apply-link.direct:hover {
+  background-color: #218838;
+}

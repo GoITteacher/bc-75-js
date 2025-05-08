@@ -2,34 +2,32 @@ const refs = {
   formEl: document.querySelector('.js-hero-form'),
   heroEl: document.querySelector('.js-hero-container'),
 };
+//!======================================================
 
-refs.formEl.addEventListener('submit', e => {
-  e.preventDefault();
+function searchHero(superhero) {
+  const BASE_URL = 'https://superhero-search.p.rapidapi.com/api/';
 
-  const hero = e.target.elements.query.value;
-
-  searchHero(hero).then(data => {
-    renderHero(data);
+  const params = new URLSearchParams({
+    hero: superhero,
   });
 
-  e.target.reset();
-});
+  const url = `${BASE_URL}?${params}`;
 
-function searchHero(userValue) {
-  const BASE_URL = 'https://superhero-search.p.rapidapi.com';
-  const END_POINT = '/api/';
-  const PARAMS = `?hero=${userValue}`;
-  const url = BASE_URL + END_POINT + PARAMS;
-
-  const options = {
-    headers: {
-      'X-RapidAPI-Key': 'f6fe44fec7msh9f58de139869781p15408ajsn8e7b73b5d6b1',
-      'X-RapidAPI-Host': 'superhero-search.p.rapidapi.com',
-    },
+  const headers = {
+    'x-rapidapi-key': '9b3ff61931msh1b42d77d34e33dap1c29cajsn3d3169e0e2f4',
+    'x-rapidapi-host': 'superhero-search.p.rapidapi.com',
   };
 
-  return fetch(url, options).then(res => res.json());
+  return fetch(url, { headers }).then(res => {
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new Error('УПС! Щось пішло не так!');
+    }
+  });
 }
+
+//!======================================================
 
 function heroTemplate(hero) {
   const { appearance, biography, images, name, powerstats } = hero;
@@ -62,7 +60,20 @@ function heroTemplate(hero) {
 </div>`;
 }
 
-function renderHero(hero) {
-  const markup = heroTemplate(hero);
-  refs.heroEl.insertAdjacentHTML('afterbegin', markup);
-}
+//!======================================================
+
+refs.formEl.addEventListener('submit', e => {
+  e.preventDefault();
+  const superhero = e.target.elements.query.value;
+
+  searchHero(superhero)
+    .then(data => {
+      const markup = heroTemplate(data);
+      refs.heroEl.insertAdjacentHTML('afterbegin', markup);
+    })
+    .catch(err => {
+      console.log('УПС');
+    });
+
+  e.target.reset();
+});

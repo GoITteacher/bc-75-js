@@ -2,49 +2,28 @@ const refs = {
   formEl: document.querySelector('.js-binance-form'),
   infoEl: document.querySelector('.js-binance-info'),
 };
-let userSymbol;
 
-// =================================
+//!======================================================
 
-refs.formEl.addEventListener('submit', e => {
-  e.preventDefault();
-  userSymbol = e.target.elements.query.value;
-
-  getPriceBySymbol(userSymbol)
-    .then(data => {
-      renderTicker(data);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-
-  e.target.reset();
-});
-
-// =================================
-function getPriceBySymbol(userSymbol) {
+function getSymbolPrice(userSymbol) {
   const BASE_URL = 'https://binance43.p.rapidapi.com';
   const END_POINT = '/ticker/price';
-  const PARAMS = `?symbol=${userSymbol}`;
 
-  const url = BASE_URL + END_POINT + PARAMS;
+  const params = new URLSearchParams({
+    symbol: userSymbol,
+  });
 
-  const options = {
-    headers: {
-      'X-RapidAPI-Key': 'f6fe44fec7msh9f58de139869781p15408ajsn8e7b73b5d6b1',
-      'X-RapidAPI-Host': 'binance43.p.rapidapi.com',
-    },
+  const url = `${BASE_URL}${END_POINT}?${params}`;
+
+  const headers = {
+    'x-rapidapi-key': '9b3ff61931msh1b42d77d34e33dap1c29cajsn3d3169e0e2f4',
+    'x-rapidapi-host': 'binance43.p.rapidapi.com',
   };
 
-  return fetch(url, options).then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      throw new Error(res.status);
-    }
-  });
+  return fetch(url, { headers }).then(res => res.json());
 }
-// =================================
+
+//!======================================================
 
 function symbolTemplate(obj) {
   const icon = obj.symbol.toLowerCase().replace('usdt', '');
@@ -58,7 +37,15 @@ function symbolTemplate(obj) {
   <span class="coin-price">${obj.price}</span>`;
 }
 
-function renderTicker(obj) {
-  const markup = symbolTemplate(obj);
-  refs.infoEl.innerHTML = markup;
-}
+//!======================================================
+
+refs.formEl.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const query = e.target.elements.query.value;
+
+  getSymbolPrice(query).then(data => {
+    const markup = symbolTemplate(data);
+    refs.infoEl.innerHTML = markup;
+  });
+});
