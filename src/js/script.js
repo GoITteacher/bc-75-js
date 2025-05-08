@@ -6,7 +6,9 @@ import './modules/pokemon';
 import './modules/instagram';
 import './modules/user';
 
-// ====================================
+//!======================================================
+
+//!======================================================
 
 /* function getPostsByUser(userId) {
   const BASE_URL = 'https://jsonplaceholder.typicode.com';
@@ -22,3 +24,5 @@ import './modules/user';
 
   return fetch(url, options).then(res => res.json());
 } */
+
+//!======================================================
