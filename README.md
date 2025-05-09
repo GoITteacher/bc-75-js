@@ -1,6 +1,6 @@
 # ПЛАН
 
-- Пакет [json-server] (https://github.com/typicode/json-server)
+- Пакет [json-server](https://github.com/typicode/json-server)
 - Postman
 - Робота з приватним API
   - **C**reate

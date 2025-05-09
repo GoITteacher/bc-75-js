@@ -1,64 +1,55 @@
-export class BooksAPI {
-  constructor() {
-    this.BASE_URL = 'http://localhost:3000';
-    this.END_POINT = '/books';
-    this.API_KEY = '123123';
-  }
+import Axios from 'axios';
 
-  getBooks() {
-    const url = this.BASE_URL + this.END_POINT;
-    return fetch(url).then(res => res.json());
-  }
+// axios.defaults.baseURL = '';
+// axios.defaults.params = {};
 
-  createBook(data) {
-    const url = this.BASE_URL + this.END_POINT;
+const axios = Axios.create({
+  baseURL: 'http://localhost:3000',
+  params: {},
+  header: {},
+});
 
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    };
+export function getBooks() {
+  const res = axios.get('/books');
+  return res
+    .then(res => res.data)
+    .catch(() => {
+      return Promise.reject('Під час отримання даних сталась помилка.');
+    });
+}
 
-    return fetch(url, options).then(res => res.json());
-  }
+export function createBook(book) {
+  const response = axios.post('/books', book);
+  return response
+    .then(res => res.data)
+    .catch(() => {
+      return Promise.reject('Під час створення сталась помилка.');
+    });
+}
 
-  updateBook(id, book) {
-    const url = `${this.BASE_URL}${this.END_POINT}/${id}`;
+export function updateBook({ id, ...book }) {
+  const response = axios.patch(`/books/${id}`, book);
+  return response
+    .then(res => res.data)
+    .catch(() => {
+      return Promise.reject('Під час оновлення сталась помилка.');
+    });
+}
 
-    const options = {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(book),
-    };
+export function resetBook({ id, ...book }) {
+  const response = axios.put(`/books/${id}`, book);
+  return response
+    .then(res => res.data)
+    .catch(() => {
+      return Promise.reject('Під час перезапису сталась помилка.');
+    });
+}
 
-    return fetch(url, options).then(res => res.json());
-  }
-
-  resetBook(id, book) {
-    const url = `${this.BASE_URL}${this.END_POINT}/${id}`;
-
-    const options = {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(book),
-    };
-
-    return fetch(url, options).then(res => res.json());
-  }
-
-  deleteBook(id) {
-    const url = `${this.BASE_URL}${this.END_POINT}/${id}`;
-
-    const options = {
-      method: 'DELETE',
-    };
-
-    return fetch(url, options).then(res => res.json());
-  }
+export function deleteBook(id) {
+  const response = axios.delete(`/books/${id}`);
+  return response
+    .then(res => res.data)
+    .catch(() => {
+      return Promise.reject('Під час видалення сталась помилка.');
+    });
 }

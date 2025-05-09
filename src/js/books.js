@@ -1,4 +1,8 @@
-import { BooksAPI } from './modules/booksAPI';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import * as booksApi from './modules/booksAPI.js';
+
+//!======================================================
 
 const refs = {
   createFormElem: document.querySelector('.js-create-form'),
@@ -6,28 +10,127 @@ const refs = {
   resetFormElem: document.querySelector('.js-reset-form'),
   deleteFormElem: document.querySelector('.js-delete-form'),
   bookListElem: document.querySelector('.js-article-list'),
+  loader: document.querySelector('.js-loader'),
 };
-const booksAPI = new BooksAPI();
 
-// ===========================================
+//!======================================================
 
-refs.createFormElem.addEventListener('submit', onCreateFormSubmit);
-refs.updateFormElem.addEventListener('submit', onUpdateFormSubmit);
-refs.resetFormElem.addEventListener('submit', onResetFormSubmit);
-refs.deleteFormElem.addEventListener('submit', onDeleteFormSubmit);
+refs.createFormElem.addEventListener('submit', handleCreateBook);
+refs.updateFormElem.addEventListener('submit', handleUpdateBook);
+refs.resetFormElem.addEventListener('submit', handleResetBook);
+refs.deleteFormElem.addEventListener('submit', handleDeleteBook);
 
-// ===========================================
+function handleCreateBook(e) {
+  e.preventDefault();
+  showLoader();
+  const formData = new FormData(e.target);
 
-booksAPI
-  .getBooks()
-  .then(data => {
-    renderBooks(data.reverse());
-  })
-  .catch(err => {
-    console.log(err);
+  const userBook = {
+    rating: Math.round(Math.random() * 10),
+    price: Math.round(Math.random() * 1000),
+    img: `https://picsum.photos/1280/720?random=${Math.round(
+      Math.random() * 1000,
+    )}`,
+  };
+
+  formData.forEach((value, key) => {
+    key = key.slice(4).toLowerCase();
+    userBook[key] = value;
   });
 
-// ===========================================
+  booksApi
+    .createBook(userBook)
+    .then(book => {
+      const markup = templateBook(book);
+      refs.bookListElem.insertAdjacentHTML('beforeend', markup);
+    })
+    .catch(errorHandler)
+    .finally(hideLoader);
+
+  e.target.reset();
+}
+
+function handleUpdateBook(e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+
+  const userBook = {};
+
+  formData.forEach((value, key) => {
+    key = key.slice(4).toLowerCase();
+    if (value) {
+      userBook[key] = value;
+    }
+  });
+
+  booksApi
+    .updateBook(userBook)
+    .then(book => {
+      const oldBookElem = refs.bookListElem.querySelector(
+        `[data-id="${book.id}"]`,
+      );
+
+      const markup = templateBook(book);
+      oldBookElem.insertAdjacentHTML('afterend', markup);
+
+      oldBookElem.remove();
+    })
+    .catch(errorHandler);
+
+  e.target.reset();
+}
+
+function handleResetBook(e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const userBook = {
+    rating: Math.round(Math.random() * 10),
+    price: Math.round(Math.random() * 1000),
+    img: `https://picsum.photos/1280/720?random=${Math.round(
+      Math.random() * 1000,
+    )}`,
+  };
+
+  formData.forEach((value, key) => {
+    key = key.slice(4).toLowerCase();
+    userBook[key] = value;
+  });
+
+  booksApi
+    .resetBook(userBook)
+    .then(book => {
+      const oldBookElem = refs.bookListElem.querySelector(
+        `[data-id="${book.id}"]`,
+      );
+
+      const markup = templateBook(book);
+      oldBookElem.insertAdjacentHTML('afterend', markup);
+
+      oldBookElem.remove();
+    })
+    .catch(errorHandler);
+
+  e.target.reset();
+}
+function handleDeleteBook(e) {
+  e.preventDefault();
+
+  const id = e.target.elements.bookId.value;
+
+  booksApi
+    .deleteBook(id)
+    .then(() => {
+      const oldBookElem = refs.bookListElem.querySelector(`[data-id="${id}"]`);
+
+      oldBookElem.remove();
+    })
+    .catch(errorHandler);
+}
+//!======================================================
+
+booksApi.getBooks().then(renderBooks);
+
+//!======================================================
 
 function templateBook({ id, title, desc, author, img, price, rating }) {
   return `
@@ -59,73 +162,20 @@ function renderBooks(books) {
 }
 
 // ===========================================
-
-function onCreateFormSubmit(e) {
-  e.preventDefault();
-
-  const book = {
-    title: e.target.elements.bookTitle.value,
-    author: e.target.elements.bookAuthor.value,
-    desc: e.target.elements.bookDesc.value,
-  };
-
-  booksAPI.createBook(book).then(newBook => {
-    const markup = templateBook(newBook);
-    refs.bookListElem.insertAdjacentHTML('afterbegin', markup);
-  });
-
-  e.target.reset();
+function showLoader() {
+  refs.loader.classList.remove('hidden');
+  refs.bookListElem.classList.add('hidden');
+}
+function hideLoader() {
+  refs.loader.classList.add('hidden');
+  refs.bookListElem.classList.remove('hidden');
 }
 
-function onResetFormSubmit(e) {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-  const book = {};
-
-  formData.forEach((value, key) => {
-    key = key.slice(4).toLowerCase();
-    book[key] = value;
-  });
-
-  booksAPI.resetBook(book.id, book).then(newBook => {
-    const oldBookCard = document.querySelector(`[data-id="${book.id}"]`);
-    const markup = templateBook(newBook);
-    oldBookCard.insertAdjacentHTML('afterend', markup);
-    oldBookCard.remove();
-  });
-
-  e.target.reset();
-}
-
-function onUpdateFormSubmit(e) {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-  const book = {};
-
-  formData.forEach((value, key) => {
-    key = key.slice(4).toLowerCase();
-    if (value) book[key] = value;
-  });
-
-  booksAPI.updateBook(book.id, book).then(newBook => {
-    const oldBookCard = document.querySelector(`[data-id="${book.id}"]`);
-    const markup = templateBook(newBook);
-    oldBookCard.insertAdjacentHTML('afterend', markup);
-    oldBookCard.remove();
-  });
-
-  e.target.reset();
-}
-
-function onDeleteFormSubmit(e) {
-  e.preventDefault();
-  const id = e.target.elements.bookId.value;
-  booksAPI.deleteBook(id).then(() => {
-    const oldBookCard = document.querySelector(`[data-id="${id}"]`);
-    oldBookCard.remove();
+function errorHandler(err) {
+  iziToast.error({
+    title: 'Упс щось пішло не так',
+    message: err,
   });
 }
 
-// =========================
+//!======================================================

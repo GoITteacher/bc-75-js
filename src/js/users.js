@@ -1,12 +1,6 @@
-import {
-  deleteUser,
-  getUsers,
-  resetUser,
-  updateUser,
-} from './modules/usersAPI';
-import { createUser } from './modules/usersAPI';
+import * as usersApi from './modules/usersAPI.js';
 
-// ===================================================
+//!======================================================
 const refs = {
   userListElem: document.querySelector('.js-user-list'),
   createUserForm: document.querySelector('.js-create-form'),
@@ -15,112 +9,123 @@ const refs = {
   deleteUserForm: document.querySelector('.js-delete-form'),
 };
 
-// ============================================================
+//!======================================================
+refs.createUserForm.addEventListener('submit', handleCreateUser);
+refs.updateUserForm.addEventListener('submit', handleUpdateUser);
+refs.resetUserForm.addEventListener('submit', handleResetUser);
+refs.userListElem.addEventListener('click', handleDeleteUser);
 
-refs.createUserForm.addEventListener('submit', onCreateUser);
-refs.updateUserForm.addEventListener('submit', onUpdateUser);
-refs.resetUserForm.addEventListener('submit', onResetUser);
-refs.deleteUserForm.addEventListener('submit', onDeleteUser);
-
-function onCreateUser(e) {
+function handleCreateUser(e) {
   e.preventDefault();
 
-  const myData = {
-    email: e.target.elements.userEmail.value,
+  const user = {
     name: e.target.elements.userName.value,
     phone: e.target.elements.userPhone.value,
-    img: `https://source.unsplash.com/720x1280/?random=${Math.random()}&girl,portret,celebrity`,
+    email: e.target.elements.userEmail.value,
   };
 
-  createUser(myData).then(newUser => {
-    const markup = userTemplate(newUser);
+  usersApi.createUser(user).then(user => {
+    const markup = userTemplate(user);
     refs.userListElem.insertAdjacentHTML('afterbegin', markup);
   });
 
   e.target.reset();
 }
-function onUpdateUser(e) {
+
+function handleUpdateUser(e) {
   e.preventDefault();
 
-  const myData = {};
-  const formData = new FormData(refs.updateUserForm);
+  const formData = new FormData(e.target);
 
-  formData.forEach((value, key) => {
-    if (value) {
-      myData[key] = value;
-    }
-  });
+  const id = formData.get('userId');
+  const user = {
+    name: formData.get('userName') || undefined,
+    email: formData.get('userEmail') || undefined,
+    phone: formData.get('userPhone') || undefined,
+  };
 
-  updateUser(myData).then(updatedUser => {
-    const markup = userTemplate(updatedUser);
-    const oldUser = document.querySelector(`[data-id="${myData.id}"]`);
-    oldUser.insertAdjacentHTML('afterend', markup);
-    oldUser.remove();
+  console.log(user);
+
+  usersApi.updateUser(id, user).then(newUser => {
+    const oldElem = refs.userListElem.querySelector(`[data-id="${id}"]`);
+    const markup = userTemplate(newUser);
+    oldElem.insertAdjacentHTML('afterend', markup);
+
+    oldElem.remove();
   });
 
   e.target.reset();
 }
-function onResetUser(e) {
+
+function handleResetUser(e) {
   e.preventDefault();
+  const formData = new FormData(e.target);
 
-  const myData = {};
-  const formData = new FormData(refs.resetUserForm);
+  const id = formData.get('userId');
+  const user = {
+    name: formData.get('userName'),
+    email: formData.get('userEmail'),
+    phone: formData.get('userPhone'),
+  };
 
-  formData.forEach((value, key) => {
-    myData[key] = value;
-  });
+  usersApi.updateUser(id, user).then(newUser => {
+    const oldElem = refs.userListElem.querySelector(`[data-id="${id}"]`);
+    const markup = userTemplate(newUser);
+    oldElem.insertAdjacentHTML('afterend', markup);
 
-  resetUser(myData).then(updatedUser => {
-    const markup = userTemplate(updatedUser);
-    const oldUser = document.querySelector(`[data-id="${myData.id}"]`);
-    oldUser.insertAdjacentHTML('afterend', markup);
-    oldUser.remove();
+    oldElem.remove();
   });
 
   e.target.reset();
 }
-function onDeleteUser(e) {
-  e.preventDefault();
 
-  const id = e.target.elements.userId.value;
+function handleDeleteUser(e) {
+  if (e.target.dataset.type !== 'delete') return;
+  const liElem = e.target.closest('li.user-item');
+  const id = liElem.dataset.id;
 
-  deleteUser(id)
-    .then(() => {
-      const oldUser = document.querySelector(`[data-id="${id}"]`);
-      oldUser.remove();
-    })
-    .catch(err => {
-      console.log(err);
-    });
-
-  e.target.reset();
+  usersApi.deleteUser(id).then(() => {
+    liElem.remove();
+  });
 }
 
-// ============================================================
+//!======================================================
 
-getUsers().then(users => {
-  const markup = usersTemplate(users);
-  refs.userListElem.innerHTML = markup;
+refs.userListElem.addEventListener('click', e => {
+  if (e.target.dataset.type !== 'update') return;
+  const liElem = e.target.closest('li');
+  const id = liElem.dataset.id;
+
+  refs.updateUserForm.elements.userId.value = id;
+  refs.resetUserForm.elements.userId.value = id;
 });
 
-// ============================================================
+//!======================================================
 
+document.addEventListener('DOMContentLoaded', () => {
+  usersApi.getUsers().then(users => {
+    const markup = usersTemplate(users);
+    refs.userListElem.innerHTML = markup;
+  });
+});
+
+//!======================================================
 function userTemplate({ id, name, img, email, phone }) {
   return `<li class="card user-item" data-id="${id}">
   <img
-    src="https://source.unsplash.com/720x1280/?random=${id}&girl,portret,celebrity"
+    src="https://picsum.photos/1280/720?random=${id}&girl,portret,celebrity"
     alt="#"
     class="user-avatar"
   />
   <h3 class="user-title">${name}</h3>
-  <p>Phone: ${email}</p>
-  <p>Email: ${phone}</p>
-  <button class="btn button">DELETE</button>
+  <p>Phone: ${phone}</p>
+  <p>Email: ${email}</p>
+  <button class="btn button" data-type="update">UPDATE</button>
+  <button class="btn button" data-type="delete">DELETE</button>
 </li>`;
 }
 
 function usersTemplate(arr) {
   return arr.map(userTemplate).join('\n\n\n\n');
 }
-
-// =======================================
+//!======================================================
