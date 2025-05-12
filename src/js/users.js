@@ -1,5 +1,3 @@
-import { UsersAPI } from './modules/usersAPI';
-
 // ===================================================
 const refs = {
   userListElem: document.querySelector('.js-user-list'),
@@ -9,17 +7,6 @@ const refs = {
   deleteUserForm: document.querySelector('.js-delete-form'),
 };
 // ============================================================
-
-const usersAPI = new UsersAPI();
-
-usersAPI
-  .getUsers()
-  .then(data => {
-    renderUsers(data.reverse());
-  })
-  .catch(err => {
-    console.log(err);
-  });
 
 // ==========================================================
 
