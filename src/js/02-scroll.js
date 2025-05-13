@@ -1,8 +1,8 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-
-import { fetchArticles } from './modules/newsAPI2.js';
-import { articlesTemplate } from './templates/render-function2.js';
+import { searchArticles } from './modules/newsAPI';
+import { articlesTemplate } from './templates/render-functions';
+import { PAGE_SIZE } from './modules/constants';
 
 const refs = {
   formElem: document.querySelector('.js-search-form'),
@@ -10,110 +10,76 @@ const refs = {
   targetElem: document.querySelector('.js-target'),
   loadElem: document.querySelector('.js-loader'),
 };
+//!======================================================
+let query = '';
+let currentPage = 1;
+let maxPage = 1;
 
-// ======================================
-let query;
-let page;
-let maxPage;
+const observer = new IntersectionObserver(handleLoadMore, {
+  threshold: 0,
+  rootMargin: '1500px',
+});
 
-refs.formElem.addEventListener('submit', onFormSubmit);
-
-// ======================================
-
-async function onFormSubmit(e) {
+//!======================================================
+refs.formElem.addEventListener('submit', async e => {
   e.preventDefault();
-  query = e.target.elements.query.value.trim();
-  page = 1;
 
-  if (!query) {
-    showError('Empty field');
-    return;
-  }
+  currentPage = 1;
+  query = e.target.elements.query.value;
+  const data = await searchArticles(query, currentPage);
+  const markup = articlesTemplate(data.articles);
+  refs.articleListElem.innerHTML = markup;
+  maxPage = Math.round(data.totalResults / PAGE_SIZE);
 
-  showLoader();
-
-  try {
-    const data = await fetchArticles(query, page);
-    if (data.totalResults === 0) {
-      showError('Sorry!');
-    }
-    maxPage = data.total_pages;
-    refs.articleListElem.innerHTML = '';
-    renderArticles(data.articles);
-  } catch (err) {
-    showError(err);
-  }
-
-  hideLoader();
-  checkObserverStatus();
+  updateObserverStatus();
+  showNotification();
   e.target.reset();
-}
+});
 
-async function onLoadMore() {
-  page += 1;
-  showLoader();
-  const data = await fetchArticles(query, page);
-  renderArticles(data.articles);
-  hideLoader();
-  checkObserverStatus();
+//!======================================================
 
-  scrollBy({
-    behavior: 'smooth',
-    top: 1000,
-  });
-}
-
-// ======================================
-function renderArticles(articles) {
-  const markup = articlesTemplate(articles);
+async function loadMore() {
+  currentPage += 1;
+  const data = await searchArticles(query, currentPage);
+  const markup = articlesTemplate(data.articles);
   refs.articleListElem.insertAdjacentHTML('beforeend', markup);
+
+  updateObserverStatus();
+  showNotification();
 }
 
-function observeTarget() {
-  console.log('observe');
-  observer.observe(refs.targetElem);
-}
-function unobserveTarget() {
-  console.log('unobserve');
-  observer.unobserve(refs.targetElem);
-}
+//!======================================================
 
-function showLoader() {
-  refs.loadElem.classList.remove('hidden');
-}
-function hideLoader() {
-  refs.loadElem.classList.add('hidden');
-}
-
-function showError(msg) {
-  iziToast.error({
-    title: 'Error',
-    message: msg,
-  });
-}
-
-function checkObserverStatus() {
-  if (page >= maxPage) {
-    unobserveTarget();
-    showError('Sorry! The End!');
-  } else {
-    observeTarget();
+function handleLoadMore([entry], observer) {
+  if (entry.isIntersecting) {
+    loadMore();
   }
 }
-// ========================================
 
-const options = {
-  root: document.querySelector('#scrollArea'),
-  rootMargin: '0px',
-  threshold: 1.0,
-};
+function updateObserverStatus() {
+  console.log('updateObserverStatus', currentPage < maxPage);
 
-const callback = function (entries, observer) {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      onLoadMore();
-    }
-  });
-};
+  if (currentPage < maxPage) {
+    observer.observe(refs.targetElem);
+  } else {
+    observer.unobserve(refs.targetElem);
+  }
+}
 
-const observer = new IntersectionObserver(callback, options);
+//!======================================================
+
+function showNotification() {
+  if (currentPage === 1 && currentPage !== maxPage && maxPage !== 0) {
+    iziToast.info({
+      message: `Всього знайдено елементів: ${maxPage * PAGE_SIZE}`,
+    });
+  }
+
+  if (currentPage === maxPage) {
+    iziToast.info({ message: 'Ви дійшли кінця колекції' });
+  }
+
+  if (maxPage === 0) {
+    iziToast.info({ message: 'нічого не знайдено' });
+  }
+}

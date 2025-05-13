@@ -1,5 +1,4 @@
-import { getPokemons, getPokemonInfo } from './modules/pokemonApi';
-const url = `https://pokeapi.co/api/v2/pokemon?limit=8&offset=0`;
+import { getPokemons } from './modules/pokemonApi';
 
 const refs = {
   formElem: document.querySelector('.js-search-form'),
@@ -8,13 +7,40 @@ const refs = {
   nextBtnElem: document.querySelector('.js-btn-next'),
 };
 
+//!======================================================
+const PAGE_SIZE = 8;
+let initUrl = `https://pokeapi.co/api/v2/pokemon?limit=${PAGE_SIZE}&offset=0`;
 let nextUrl = '';
 let prevUrl = '';
 
-getPokemons(url).then(data => {
-  loadPokemonData(data);
+//!======================================================
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const data = await getPokemons(initUrl);
+  nextUrl = data.next;
+  prevUrl = data.prev;
+  renderPokemon(data.results);
+  updateBtnStatus();
 });
 
+//!======================================================
+refs.nextBtnElem.addEventListener('click', async () => {
+  const data = await getPokemons(nextUrl);
+  nextUrl = data.next;
+  prevUrl = data.previous;
+  renderPokemon(data.results);
+  updateBtnStatus();
+});
+
+refs.prevBtnElem.addEventListener('click', async () => {
+  const data = await getPokemons(prevUrl);
+  nextUrl = data.next;
+  prevUrl = data.previous;
+  renderPokemon(data.results);
+  updateBtnStatus();
+});
+
+//!======================================================
 function pokemonTemplate({
   sprites,
   name,
@@ -50,35 +76,9 @@ function renderPokemon(pokemonList) {
   const markup = pokemonList.map(pokemonTemplate).join('');
   refs.pokemonListElem.innerHTML = markup;
 }
+//!======================================================
 
-refs.nextBtnElem.addEventListener('click', onBtnNextClick);
-refs.prevBtnElem.addEventListener('click', onBtnPrevClick);
-
-function onBtnNextClick() {
-  getPokemons(nextUrl).then(data => {
-    loadPokemonData(data);
-  });
-}
-
-function onBtnPrevClick() {
-  getPokemons(prevUrl).then(data => {
-    loadPokemonData(data);
-  });
-}
-
-function updateBtn() {
-  refs.prevBtnElem.disabled = !prevUrl;
+function updateBtnStatus() {
   refs.nextBtnElem.disabled = !nextUrl;
+  refs.prevBtnElem.disabled = !prevUrl;
 }
-
-function loadPokemonData(data) {
-  const { next, previous, results } = data;
-  nextUrl = next;
-  prevUrl = previous;
-  updateBtn();
-  getPokemonInfo(results).then(pokemonList => {
-    renderPokemon(pokemonList);
-  });
-}
-
-// =========

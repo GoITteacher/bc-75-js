@@ -1,15 +1,15 @@
-export function getPokemons(url) {
-  return fetch(url).then(res => res.json());
+import axios from 'axios';
+
+export async function getPokemons(url) {
+  const res = await axios.get(url);
+
+  const promises = res.data.results.map(el => getPokemonInfo(el.name));
+  const pokemons = await Promise.all(promises);
+  res.data.results = pokemons;
+  return res.data;
 }
 
-export function getPokemonInfo(results) {
-  const promises = results.map(el => {
-    return getPokemon(el.url);
-  });
-  const result = Promise.all(promises);
-  return result;
-}
-
-function getPokemon(url) {
-  return fetch(url).then(res => res.json());
+export async function getPokemonInfo(name) {
+  const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  return res.data;
 }
